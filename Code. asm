@@ -1,0 +1,56 @@
+; Define constants
+SENSOR_PORT     equ PORTA   ; Port where water level sensors are connected
+PUMP_CONTROL    equ PORTB   ; Port where the relay for pump control is connected
+
+; Define variables
+waterLevel      equ 0xFF    ; Variable to store water level status
+
+; Interrupt Service Routine (ISR) for external interrupt 0
+ORG 0x04
+GOTO ISR_INT0
+
+; Main program
+ORG 0x00
+START:
+    ; Initialize
+    BSF STATUS, RP0 ; Bank 1
+    CLRF TRISA      ; Set all PORTA pins as inputs for water level sensors
+    CLRF TRISB      ; Set all PORTB pins as outputs for pump control
+    BCF STATUS, RP0 ; Bank 0
+    
+    ; Configure external interrupt 0
+    BSF INTCON, INT0IE  ; Enable external interrupt 0
+    BCF INTCON, INT0IF  ; Clear interrupt flag
+    
+    ; Main loop
+MAIN_LOOP:
+    ; Implement control logic based on water level status
+    MOVF waterLevel, W
+    ANDLW 0x03          ; Mask lower two bits (assuming 4 possible water levels)
+    
+    ; Custom logic based on water level status
+    ; You may need to adjust this based on your specific requirements
+    
+    ; Example: If water level is 00, turn off the pump
+    BTFSS STATUS, Z      ; Check if water level is 00
+    BSF PORTB, 0        ; Set RB0 to turn on the pump
+    BCF PORTB, 0        ; Clear RB0 to turn off the pump
+    
+    ; Other logic for different water levels can be added
+    
+    ; End of main loop
+    GOTO MAIN_LOOP
+
+; External Interrupt 0 Service Routine
+ISR_INT0:
+    ; Read the status of water level sensors and update the waterLevel variable
+    MOVF SENSOR_PORT, W
+    MOVWF waterLevel
+
+    ; Additional debounce logic or filtering can be added here if needed
+
+    ; Clear interrupt flag
+    BCF INTCON, INT0IF
+
+    ; Return from ISR
+    RETFIE
