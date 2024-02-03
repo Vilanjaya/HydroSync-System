@@ -1,5 +1,5 @@
 # HydroSync System
-Designing a water level controlling system using a PIC16F877A micro-controller involves interfacing sensors to detect water levels, programming the micro-controller, and implementing control logic. In this example, I'll outline a basic system using interrupts to monitor water levels and control a pump to maintain a desired level. Please note that this is a simplified example, and actual implementations may vary based on specific requirements and hardware.
+Designed a water level controlling system using a PIC16F877A micro-controller involves interfacing sensors to detect water levels, programming the micro-controller, and implementing control logic. A outline of the system using interrupts to monitor water levels and control a pump to maintain a desired level. 
 
 **Components Needed:**
 
